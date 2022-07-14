@@ -4,5 +4,11 @@
     "port":5432,
     "username":"postgres",
     "password":"admin",
-    "database":"apisales"
+    "database":"apisales",
+    "migrations":[
+        "./src/shared/typeorm/migrations/*.ts"
+    ],
+    "cli":{
+        "migrationDir":"./src/shared/typeorm/migrations/"
+    }
 }
