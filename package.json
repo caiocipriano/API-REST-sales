@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build/main/config/server.js",
-    "build": "npx tsc"
+    "dev": "ts-node-dev src/shared/http/server.ts"
   },
   "keywords": [],
   "author": "",
