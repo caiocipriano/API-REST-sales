@@ -4,7 +4,7 @@ import { Product } from './../typeorm/entities/Product';
 import AppError from '@shared/errors/AppError';
 
 interface IRequest{
-    id:number
+    id:string
 }
 
 class ShowProductService{
