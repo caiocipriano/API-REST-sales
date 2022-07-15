@@ -9,7 +9,7 @@ interface IRequest{
 }
 
 
-class CreateProductsService{
+class CreateProductService{
     public async execute({name,quantity,price}:IRequest):Promise<Product>{
         const productRepository = getCustomRepository(ProductRepository);
         const productExist= await productRepository.findByName(name);
@@ -31,4 +31,4 @@ class CreateProductsService{
     }
 }
 
-export default CreateProductsService
+export default CreateProductService
