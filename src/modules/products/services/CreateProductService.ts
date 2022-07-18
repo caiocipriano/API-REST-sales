@@ -1,33 +1,28 @@
-import { ProductRepository } from './../typeorm/repositories/ProductRepository';
-import { getCustomRepository } from 'typeorm';
-import { Product } from './../typeorm/entities/Product';
 import AppError from '@shared/errors/AppError';
-interface IRequest{
-    name:string,
-    quantity:number,
-    price:number
-}
+import {PrismaClient} from '@prisma/client'
+import express,{ Request, Response } from 'express';
 
+const prisma = new PrismaClient()
+const app = express()
+app.use(express.json())
 
 class CreateProductService{
-    public async execute({name,quantity,price}:IRequest):Promise<Product>{
-        const productRepository = getCustomRepository(ProductRepository);
-        const productExist= await productRepository.findByName(name);
+    public async execute(request:Request,response:Response){
+        const {name,price,quantity} = request.body
+        const productExist = await prisma.product.findUnique({where:{name}})
 
         if(productExist){
             throw new AppError("Product Exist")
         }
 
-        const product = productRepository.create({
+        const product = await prisma.product.create({
+            data:{
             name,
-            quantity,
-            price
+            price,
+            quantity
+        }
         })
-
-        await productRepository.save(product)
-
-        return product
-
+        response.json(product)
     }
 }
 
