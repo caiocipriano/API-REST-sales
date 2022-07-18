@@ -19,7 +19,7 @@ export class Product{
     created_at:Date;
 
     @CreateDateColumn()
-    uptated_at:Date;
+    updated_at:Date;
 }
 
 export default Product;
