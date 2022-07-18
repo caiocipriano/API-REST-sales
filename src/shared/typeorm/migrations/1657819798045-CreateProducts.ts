@@ -7,10 +7,9 @@ export class CreateProducts1657819798045 implements MigrationInterface {
             name:'products',
             columns:[
                 {
-                    name:'id',
-                    type:'uuid',
-                    isPrimary:true,
-                    generationStrategy:'uuid'
+                    name: "id",
+                    type: 'int',
+                    isPrimary: true
                 },{
                     name:'name',
                     type:'varchar'
@@ -27,12 +26,12 @@ export class CreateProducts1657819798045 implements MigrationInterface {
                 },
                 {
                     name: 'created_at',
-                    type: 'timestamp',
+                    type: 'timestamp with time zone',
                     default: 'now()'
                 },
                 {
                     name: 'updated_at',
-                    type: 'timestamp',
+                    type: 'timestamp with time zone',
                     default: 'now()'
                   }
             ]
