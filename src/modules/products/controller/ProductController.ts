@@ -6,40 +6,27 @@ import ShowProductService from "../services/ShowProductService";
 import UpdateProductService from "../services/UpdateProductService";
 
 export default class ProductController{
-    public async index(request:Request, response:Response):Promise<Response>{
+    public async findAll(request:Request, response:Response){
         const listProducts = new ListProductService()
-        const products = await listProducts.execute()
-        return response.json(products)
+        await listProducts.execute(request,response)
     }
-
-    public async show(request:Request, response:Response):Promise<Response>{
-        const {id}= request.params
+    public async findById(request:Request, response:Response):Promise<Response>{
         const showProduct = new ShowProductService()
-        const product = await showProduct.execute({id})
+        const product = await showProduct.findById(request,response)
         return response.json(product)
     }
-
     public async create(request:Request, response:Response){
         const createService = new CreateProductService()
         createService.execute(request,response)
     }
-
     public async update(request:Request, response:Response):Promise<Response>{
-        const {name, quantity, price} = request.body
-        const {id}=request.params
-        const updateProduct = new UpdateProductService()
-        const product = await updateProduct.execute({
-            id,
-            name,
-            quantity,
-            price
-        })
+        const updateService = new UpdateProductService()
+        const product = await updateService.UpdateById(request,response)
         return response.json(product)
     }
-    public async delete(request:Request, response:Response):Promise<Response>{
-        const {id}= request.params
-        const deleteProduct = new DeleteProductService()
-        const product = await deleteProduct.execute({id})
+    public async deleteById(request:Request,response:Response):Promise<Response>{
+        const deleteService = new DeleteProductService()
+        const products = await deleteService.DeleteById(request,response)
         return response.json([])
     }
 }
