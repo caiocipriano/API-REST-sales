@@ -9,10 +9,10 @@ app.use(express.json())
 class CreateUserService{
     public async execute(request:Request,response:Response){
         const {name,email,password} = request.body
-        const userExist = await prisma.user.findFirst({where:{name}})
-        
-        if(userExist){
-            response.json({message:"Usuario com este nome já Cadastrado"})
+        const emailExist = await prisma.user.findUnique({where:{email}})
+
+        if(emailExist){
+            response.json({message:"Usuario com este email já Cadastrado"})
         }
 
         const user = await prisma.user.create({
