@@ -11,6 +11,16 @@ class ListUserService{
         const users = await prisma.user.findMany()
         return response.json(users)
     }
+    async findByEmail(email:string){
+          const user = await prisma.user.findUnique({
+              where:{email}
+          })
+          if(!user){
+            throw new AppError("Erro na requisição")
+          }
+          return user
+
+      }
 }
 
 export default ListUserService
