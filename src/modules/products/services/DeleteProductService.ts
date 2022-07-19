@@ -1,23 +1,22 @@
-import { ProductRepository } from './../typeorm/repositories/ProductRepository';
-import { getCustomRepository } from 'typeorm';
+import express,{Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
-interface IRequest{
-    id:string
-}
+const app = express()
+app.use(express.json())
+const prisma = new PrismaClient()
 
 class DeleteProductService{
-    public async execute({id}:IRequest): Promise<void>{
-        const productRepository = getCustomRepository(ProductRepository);
+    public async DeleteById(request:Request, response:Response){
+        const {id}=request.params
+        const productExist = await prisma.product.findUnique({where:{Id:Number(id)}})
 
-        const product = await productRepository.findOne(id)
-
-        if(!product){
+        if(!productExist){
             throw new AppError("Product not found")
         }
 
-        await productRepository.remove(product)
-
+        await prisma.product.delete({where:{Id:Number(id)}})
+        response.json([])
     }
 }
 

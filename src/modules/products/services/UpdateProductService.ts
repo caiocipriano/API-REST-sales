@@ -1,37 +1,30 @@
-import { ProductRepository } from './../typeorm/repositories/ProductRepository';
-import { getCustomRepository } from 'typeorm';
-import { Product } from './../typeorm/entities/Product';
+import express,{ Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
-interface IRequest{
-    id:string;
-    name:string;
-    quantity:number;
-    price:number
-}
+const app = express()
+app.use(express.json())
+const prisma = new PrismaClient()
+
 
 class UpdateProductService{
-    public async execute({id,name,quantity,price}:IRequest):Promise<Product>{
-        const productRepository = getCustomRepository(ProductRepository);
+    public async UpdateById(request:Request, response:Response){
+        const {id} = request.params
+        const {name, price,quantity}= request.body
+        const productExist= await prisma.product.findUnique({where:{Id:Number(id)}});
 
-        const product= await productRepository.findOne(id);
-        if(!product){
+        if(!productExist){
             throw new AppError("Product not found")
         }
-
-        const productExists = await productRepository.findByName(name)
-        if(productExists && name != product.name){
-            throw new AppError("Product name Exist")
-        }
-
-        product.name=name;
-        product.quantity=quantity;
-        product.price=price;
-
-        await productRepository.save(product)
-
-        return product
-
+        const product = await prisma.product.update({
+            where:{Id:Number(id)},
+            data:{
+                name,
+                price,
+                quantity
+            }
+        })
+        return response.json(product)
     }
 }
 
