@@ -1,7 +1,9 @@
-import AppError from '@shared/errors/AppError';
 import {PrismaClient} from '@prisma/client'
-import express,{ Request, Response } from 'express';
-import { compare, hash } from 'bcryptjs';
+import express,{ Response } from 'express';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
+import auth from '@config/auth';
+
 import ListUserService from './ListUserService';
 
 const prisma = new PrismaClient()
@@ -22,7 +24,15 @@ class CreateSessionService{
         if(!passwordConfirmed){
             response.json({message:"Senha/Email Incorreto"})
         }
-        response.json(user)
+
+        const token = sign({},auth.jwt.secret,{
+            subject:user.email,
+            expiresIn:auth.jwt.expiresIn
+        })
+
+        response.json({user,token})
+
+
     }
 }
 
